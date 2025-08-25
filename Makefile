@@ -23,11 +23,12 @@ logs:
 stop-all:		## Stop all running containers 
 	docker stop $$(docker ps -q)
 
-up:
-	docker compose up --build --remove-orphans -d
+up: up-nd
 
 up-nd:
 	docker-compose up --build --remove-orphans
+up-d:
+	docker-compose up --build --remove-orphans -d
 
 assets-dev:		# Build frontned assets
 	docker-compose exec app npm run dev

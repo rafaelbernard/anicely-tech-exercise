@@ -1,121 +1,167 @@
-# Employee CRUD Application - Tech Exercise
+# Engineering Tech Exercise
 
-## The Test
-• Given a CSV file [provided below]
-• Make a simple web-based interface which:
-    ◦ Accepts the CSV file
-    ◦ Imports the CSV file into a database
-    ◦ Displays the list of Employees
-    ◦ allows the user to edit an Employee’s Email Address
-    ◦ Shows the average salary of each company
+A Clean Architecture implementation of the [Technical Exercise detailed at ./test-requirements.md](./test-requirements.md).
 
-### You must
-• Use a relational Database, e.g., MySQL
-• Use PHP
-• NOT use any 3rd-party PHP libraries for the ORM layer, or CSV handling
-• Submit in a new Github repository, and link to it in your email.
+## Architecture Overview
 
-### You may
-• use plain JavaScript, or any JS framework you’re comfortable with. Our techstack uses VUE
+The application follows **Clean Architecture** principles with **Domain-Driven Design (DDD)** patterns, implementing a employee management system with the following layers:
 
-## About
+### Domain Layer (Business Logic)
+- **Employee Domain**: Core business entities with rich domain modeling
+- **Company Domain**: Separate bounded context for company management
+- **Value Objects**: Email, Money, EmployeeId, CompanyId with built-in validation
+- **Domain Services**: Business rule enforcement and domain logic
 
-A Clean Architecture implementation of an Employee CRUD system with DDD and SOLID principles.
+### Application Layer (Use Cases)
+- **CreateEmployee**: Handle employee creation with validation
+- **UpdateEmployeeEmail**: Manage email updates with domain constraints
+- **UploadEmployeesFromCsv**: Bulk import with company auto-creation
 
-## Features
+### Infrastructure Layer (Data & External Systems)
+- **Repository Pattern**: DBAL-based repositories for data persistence
+- **Database**: MySQL 8.0+ with proper schema design
+- **Logging**: AWS CloudWatch integration for production monitoring
 
-- **CRUD Operations**: Create, Read, Update, Delete employees
-- **CSV Upload**: Bulk import employees with duplicate detection and company auto-creation
-- **Email Editing**: Inline email editing via AJAX with instant feedback
-- **Company Management**: Separate Company domain with foreign key relationships
-- **Company Analytics**: View average salaries by company
-- **Command Pattern**: AddEmployee and AddCompany commands for data operations
-- **Value Objects**: EmployeeId, CompanyId, Email, Money with validation
-- **Clean Architecture**: Domain, Application, Infrastructure layers with DDD principles
-- **Feedback Messages**: Flash messages and dynamic alerts for user operations
-- **Authentication**: Optional API (token-based) authentication
-- **Environment Configuration**: Configurable CSV upload limits via environment variables
+## Quick Start
 
-## Setup
+### Prerequisites
+All pre-requisites are included in the Docker setup.
 
-### Quick Start (Make Commands)
-For convenience, use the provided Makefile commands:
+- **PHP 8.4+** (matches existing implementation)
+- **Docker & Docker Compose**
+- **Node.js 18+** (for frontend assets)
+- **MySQL 8.0+**
+
+### Installation Commands
 
 ```bash
-make up          # Start all services
-make down        # Stop all services
-make build       # Build containers
-make logs        # View application logs
-make bash        # Access PHP container shell
+# Clone and navigate
+git clone https://github.com/rafaelbernard/anicely-tech-exercise
+
+# Start services (all-in-one command)
+make up
+
+# Alternative: Manual Docker setup
+docker-compose up
 ```
 
-### Manual Setup (Docker Commands)
-Alternatively, use Docker commands directly:
-
-1. Start services:
+It will run non-detached mode, so you will see the logs in the terminal preparing app, database, etc. 
+Wait to see something like this:
 ```bash
-docker-compose up -d
+app-1    | [Mon Aug 25 23:33:24 2025] PHP 8.4.11 Development Server (http://0.0.0.0:8000) started
 ```
 
-All assets, caches and database seed are already built. This is all you need to run the application.
-
-3. Access the application:
-- Web: http://localhost:8000/employees
-- MySQL: localhost:3306 (root/password)
-
-_Check `Makefile` for any other commands, if you want to know them._
-
-## CSV Format
-
-```csv
-Company Name,Employee Name,Email Address,Salary
-ACME Corporation,John Doe,johndoe@acme.com,50000
-Stark Industries,Tony Stark,tony@stark.com,100000
-Wayne Enterprises,Bruce Wayne,bruce@wayneenterprises.com,90000
+Access the application
+```bash
+open http://localhost:8000/employees
 ```
 
-**Upload Features:**
-- Automatic company creation if not exists
-- Duplicate detection by name and email
-- Validation errors reported per line
-- Processing summary with counts
+**That's it!** The application includes pre-built assets, database seeds, and all necessary configurations.
 
-## Validation
+## Technology Stack
 
-- **EmployeeId**: Must be positive integer (required)
-- **CompanyId**: Must be positive integer (required)
-- **Email**: Valid email format with domain validation
-- **Salary**: Non-negative number
-- **CSV**: Max 1MB file size, proper format validation
-- **Duplicates**: Prevents duplicate employees (same name + email)
-- **Frontend**: Real-time validation with instant feedback
-- **Backend**: Domain-level validation with value objects
+### Backend Technologies
+- **Symfony 7.3**: Modern PHP framework with robust architecture
+- **Doctrine DBAL**: Database abstraction without heavy ORM overhead
+- **Bref Framework**: Serverless deployment on AWS Lambda and other AWS readiness services
+- **Monolog**: Structured logging with CloudWatch formatter
 
-## Database Schema
+### Frontend Technologies
+- **Webpack Encore**: Asset compilation and optimization
+- **Stimulus**: Progressive enhancement with minimal JavaScript
+- **Bootstrap**: Responsive UI framework via CDN
+- **AJAX**: Dynamic email editing without page reloads
 
-Check [_build-deploy/database/init.sql](./_build-deploy/database/init.sql).
+### Development Tools
+- **Docker**: Containerized development environment
+- **Make**: Automated build and deployment commands
+- **Symfony Flex**: Automated package configuration
 
-## Routes
+## AWS Deployment Ready
 
-- `/employees` - List all employees with company names
-- `/employees/create` - Create new employee
-- `/employees/upload` - CSV upload with company auto-creation
-- `/employees/companies` - Company salary averages
-- `/employees/{id}/update-email` - AJAX email update
-- `/employees/{id}/delete` - Delete employee with confirmation
-- `/api/*` - API routes (optionally require X-API-TOKEN header)
+### Serverless Configuration (or other AWS deployment)
+- **Bref Integration**: Ready for AWS deployment
+- **CloudWatch Logging**: Structured JSON logs for monitoring
+- **Symfony Bridge**: Optimized for serverless environments
 
-## AWS CloudWatch Logging
+### Production Features
+- **Environment Configuration**: Proper .env setup for different environments
+- **Asset Optimization**: Webpack Encore with production builds
+- **Security**: API-token validation, input validation, secure headers
 
-The application uses `Bref\Monolog\CloudWatchFormatter` for AWS-optimized logging:
+## Frontend Architecture
 
-# Possible Improvements
+### Stimulus Controllers
+- **Employee List Controller**: AJAX email editing with real-time feedback
+- **CSV Upload Controller**: Client-side validation and progress tracking
+- **Employee Form Controller**: Dynamic form validation
 
-- **Authentication**: User login, password reset, account deletion. Depending on app requirements. Can use OAuth2.
-- **Authorization**: User roles, permissions, access control
-- **Security**: CSRF, XSS
-- **Tests**: Integration, Acceptance
-- **Validation**: More robust rules (using a validator library, like symfony/validator)
-- **Performance**: Caching
-- **Deployment**: Docker, Kubernetes, Serverless
-- **Monitoring**: Sentry, New Relic, DataDog
+### Asset Pipeline
+```javascript
+// Webpack Encore configuration
+.addEntry('app', './assets/app.js')
+.enableStimulusBridge('./assets/controllers.json')
+.enableSassLoader()
+.enableVersioning()
+```
+
+## Features Implemented
+
+### Core Functionality
+- ✅ **CRUD Operations**: Complete employee management
+- ✅ **CSV Import**: Bulk upload with validation
+- ✅ **Company Analytics**: Average salary calculations
+- ✅ **AJAX Interface**: Dynamic email editing
+- ✅ **Responsive Design**: Mobile-friendly interface
+
+### Advanced Features
+- ✅ **Domain Validation**: Value objects with business rules
+- ✅ **Error Handling**: Comprehensive error reporting
+- ✅ **Flash Messages**: User feedback system
+- ✅ **API Endpoints**: RESTful API with token authentication (can be enabled/disabled)
+- ✅ **Logging**: CloudWatch integration for monitoring
+
+## Validation & Testing
+
+### Domain Validation
+- **Email Format**: RFC-compliant email validation
+- **Salary Constraints**: Non-negative money values
+- **ID Validation**: Positive integer constraints
+- **Duplicate Prevention**: Business rule enforcement
+
+### File Upload Validation
+- **File Type**: CSV format validation
+- **File Size**: Configurable size limits
+- **Content Validation**: Proper CSV structure checking
+- **Encoding**: UTF-8 encoding support
+
+## Development Commands
+
+```bash
+# Container management
+make up              # Start all services
+make down            # Stop all services  
+make build           # Rebuild containers
+make logs            # View application logs
+make bash            # Access PHP container
+
+# Asset compilation
+npm run dev          # Development build
+npm run watch        # Watch for changes
+npm run build        # Production build
+
+# Database operations
+bin/console cache:clear                  # Clear Symfony cache
+```
+
+## Next Steps for Development
+
+### Recommended Improvements
+1. **Integration Tests**: Test use cases and repositories
+1. **Authentication**: User login, password reset, account deletion. Depending on app requirements. Can use OAuth2.
+1. **Authorization**: User roles, permissions, access control
+1. **Security**: CSRF, XSS, Validation (eg: symfony/validator)
+1. **Caching Layer**: Implement Redis for performance
+1. **Performance Monitoring**: Add APM integration (Sentry, New Relic, DataDog)
+1. **API Documentation**: OpenAPI/Swagger integration
+1. **CI/CD**: Docker, Kubernetes, Serverless
