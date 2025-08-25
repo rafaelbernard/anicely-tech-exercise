@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Upload Employees CSV{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1>Upload Employees CSV</h1>
+    
+    {% for type, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ type == 'error' ? 'danger' : (type == 'warning' ? 'warning' : 'success') }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    
+    <div class="alert alert-info">
+        <strong>CSV Format:</strong> company_name, employee_name, email_address, salary<br>
+        <strong>File size limit:</strong> {{ csvMaxSizeMB }}MB
+    </div>
+    
+    <form method="post" enctype="multipart/form-data" data-controller="csv-upload" data-csv-upload-max-size-m-b-value="{{ csvMaxSizeMB }}" data-action="submit->csv-upload#validateForm">
+        <div class="mb-3">
+            <label for="csv_file" class="form-label">CSV File</label>
+            <input type="file" class="form-control" id="csv_file" name="csv_file" accept=".csv" required>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Upload</button>
+        <a href="{{ path('employee_list') }}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}
