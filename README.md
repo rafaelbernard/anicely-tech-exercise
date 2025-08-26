@@ -145,19 +145,27 @@ make build           # Rebuild containers
 make logs            # View application logs
 make bash            # Access PHP container
 
-# Asset compilation
+# Asset compilation (inside the container)
 npm run dev          # Development build
 npm run watch        # Watch for changes
 npm run build        # Production build
 
-# Database operations
+# Unit tests (inside the container)
+composer run tests
+
+# Time: 00:00.798, Memory: 24.00 MB
+# OK (77 tests, 198 assertions)
+
+cat coverage/unit/coverage.txt  # View test coverage summary
+
+# Database operations (inside the container)
 bin/console cache:clear                  # Clear Symfony cache
 ```
 
 ## Next Steps for Development
 
 ### Recommended Improvements
-1. **Integration Tests**: Test use cases and repositories
+1. **Integration Tests**: Test controllers, repositories and any other class that needs infrastructure
 1. **Authentication**: User login, password reset, account deletion. Depending on app requirements. Can use OAuth2.
 1. **Authorization**: User roles, permissions, access control
 1. **Security**: CSRF, XSS, Validation (eg: symfony/validator)

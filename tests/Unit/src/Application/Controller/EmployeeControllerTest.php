@@ -76,57 +76,57 @@ final class EmployeeControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    public function testDeleteRedirectsToList(): void
-    {
-        $this->markTestSkipped('Good to be implemented as Integration Test');
-
-        $repository = $this->createMock(EmployeeRepository::class);
-        $updateEmailUseCase = $this->createMock(UpdateEmployeeEmailUseCase::class);
-        $uploadCsvUseCase = $this->createMock(UploadEmployeesFromCsvUseCase::class);
-        $csvValidator = $this->createMock(GlobalFileDataCsvValidator::class);
-        
-        $repository->expects($this->once())
-            ->method('delete')
-            ->with($this->equalTo(new EmployeeId(1)));
-        
-        $controller = $this->createController($repository, $updateEmailUseCase, $uploadCsvUseCase, $csvValidator);
-        
-        $response = $controller->delete(1);
-        
-        $this->assertInstanceOf(Response::class, $response);
-        $this->assertEquals(302, $response->getStatusCode());
-    }
-
-    /**
-     * @return void
-     * @throws \PHPUnit\Framework\MockObject\Exception
-     */
-    public function testUpdateEmailReturnsSuccessJson(): void
-    {
-        $this->markTestSkipped('Good to be implemented as Integration Test');
-
-        $repository = $this->createMock(EmployeeRepository::class);
-        $updateEmailUseCase = $this->createMock(UpdateEmployeeEmailUseCase::class);
-        $uploadCsvUseCase = $this->createMock(UploadEmployeesFromCsvUseCase::class);
-        $csvValidator = $this->createMock(GlobalFileDataCsvValidator::class);
-        
-        $request = new Request();
-        $request->request->set('email', 'test@example.com');
-        
-        $updateEmailUseCase->expects($this->once())
-            ->method('execute')
-            ->with(1, $this->equalTo(new Email('test@example.com')));
-        
-        $controller = $this->createController($repository, $updateEmailUseCase, $uploadCsvUseCase, $csvValidator);
-        
-        $response = $controller->updateEmail(1, $request);
-        
-        $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertEquals(200, $response->getStatusCode());
-        
-        $data = json_decode($response->getContent(), true);
-        $this->assertTrue($data['success']);
-    }
+//    public function testDeleteRedirectsToList(): void
+//    {
+//        $this->markTestSkipped('Good to be implemented as Integration Test');
+//
+//        $repository = $this->createMock(EmployeeRepository::class);
+//        $updateEmailUseCase = $this->createMock(UpdateEmployeeEmailUseCase::class);
+//        $uploadCsvUseCase = $this->createMock(UploadEmployeesFromCsvUseCase::class);
+//        $csvValidator = $this->createMock(GlobalFileDataCsvValidator::class);
+//
+//        $repository->expects($this->once())
+//            ->method('delete')
+//            ->with($this->equalTo(new EmployeeId(1)));
+//
+//        $controller = $this->createController($repository, $updateEmailUseCase, $uploadCsvUseCase, $csvValidator);
+//
+//        $response = $controller->delete(1);
+//
+//        $this->assertInstanceOf(Response::class, $response);
+//        $this->assertEquals(302, $response->getStatusCode());
+//    }
+//
+//    /**
+//     * @return void
+//     * @throws \PHPUnit\Framework\MockObject\Exception
+//     */
+//    public function testUpdateEmailReturnsSuccessJson(): void
+//    {
+//        $this->markTestSkipped('Good to be implemented as Integration Test');
+//
+//        $repository = $this->createMock(EmployeeRepository::class);
+//        $updateEmailUseCase = $this->createMock(UpdateEmployeeEmailUseCase::class);
+//        $uploadCsvUseCase = $this->createMock(UploadEmployeesFromCsvUseCase::class);
+//        $csvValidator = $this->createMock(GlobalFileDataCsvValidator::class);
+//
+//        $request = new Request();
+//        $request->request->set('email', 'test@example.com');
+//
+//        $updateEmailUseCase->expects($this->once())
+//            ->method('execute')
+//            ->with(1, $this->equalTo(new Email('test@example.com')));
+//
+//        $controller = $this->createController($repository, $updateEmailUseCase, $uploadCsvUseCase, $csvValidator);
+//
+//        $response = $controller->updateEmail(1, $request);
+//
+//        $this->assertInstanceOf(JsonResponse::class, $response);
+//        $this->assertEquals(200, $response->getStatusCode());
+//
+//        $data = json_decode($response->getContent(), true);
+//        $this->assertTrue($data['success']);
+//    }
 
     public function testUpdateEmailReturnsErrorJson(): void
     {
