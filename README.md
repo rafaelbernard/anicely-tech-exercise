@@ -37,6 +37,7 @@ All pre-requisites are included in the Docker setup.
 ```bash
 # Clone and navigate
 git clone https://github.com/rafaelbernard/anicely-tech-exercise
+cd anicely-tech-exercise
 
 # Start services (all-in-one command)
 make up
