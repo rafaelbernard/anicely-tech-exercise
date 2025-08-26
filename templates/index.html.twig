@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1>Dashboard</h1>
+    
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Employee Management</h5>
+                </div>
+                <div class="card-body">
+                    <p>Manage employees with CRUD operations, CSV upload, and analytics.</p>
+                    <a href="{{ path('employee_list') }}" class="btn btn-primary">View Employees</a>
+                    <a href="{{ path('employee_upload') }}" class="btn btn-secondary">Upload CSV</a>
+                    <a href="{{ path('company_averages') }}" class="btn btn-info">Company Averages</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Employees{% endblock %}
+
+{% block body %}
+<div class="container mt-4" data-controller="employee-list">
+    <h1>Employees</h1>
+    
+    {% for type, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ type == 'error' ? 'danger' : (type == 'warning' ? 'warning' : 'success') }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    
+    <div class="mb-3">
+        <a href="{{ path('employee_upload') }}" class="btn btn-secondary">Upload CSV</a>
+        <a href="{{ path('company_averages') }}" class="btn btn-info">Company Averages</a>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Company</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Salary</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for employee in employees %}
+            <tr>
+                <td>{{ employee.id.value }}</td>
+                <td>{{ employee.company.name }}</td>
+                <td>{{ employee.employeeName }}</td>
+                <td>
+                    <span class="email-display">{{ employee.email.value }}</span>
+                    <input type="email" class="form-control email-edit d-none" value="{{ employee.email.value }}">
+                </td>
+                <td>${{ employee.salary.amount|number_format(2) }}</td>
+                <td>
+                    <button class="btn btn-sm btn-warning edit-email" data-action="click->employee-list#editEmail">Edit Email</button>
+                    <button class="btn btn-sm btn-success save-email d-none" data-id="{{ employee.id.value }}" data-action="click->employee-list#saveEmail">Save</button>
+                    <button class="btn btn-sm btn-secondary cancel-edit d-none" data-action="click->employee-list#cancelEdit">Cancel</button>
+                    <form method="post" action="{{ path('employee_delete', {id: employee.id.value}) }}" class="d-inline">
+                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete employee?')">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

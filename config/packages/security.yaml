@@ -1,0 +1,22 @@
+security:
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+    
+    providers:
+        api_users:
+            memory: ~
+    
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        # TODO: separate /api to use ApiToken and main to use Database Autentication (requires session)
+        main:
+            pattern: ^/
+            stateless: true
+            custom_authenticators:
+                - App\Security\ApiTokenAuthenticator
+    
+    access_control:
+        - { path: ^/, roles: ROLE_API }

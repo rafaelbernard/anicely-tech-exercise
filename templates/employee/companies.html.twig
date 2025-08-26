@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Company Average Salaries{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1>Company Average Salaries</h1>
+    
+    <div class="mb-3">
+        <a href="{{ path('employee_list') }}" class="btn btn-secondary">Back to Employees</a>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Company Name</th>
+                <th>Average Salary</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for company in companies %}
+            <tr>
+                <td>{{ company.company_name }}</td>
+                <td>${{ company.average_salary|number_format(2) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

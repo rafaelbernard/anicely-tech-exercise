@@ -1,0 +1,28 @@
+# see https://symfony.com/doc/current/reference/configuration/framework.html
+framework:
+    # Add a secret for the token storage and default encryption services
+    secret: '%env(APP_SECRET)%'
+    csrf_protection: true
+    # TODO: Set trusted host when deployed. Be aware if proxied.
+    trusted_hosts: ['%env(ALLOWED_HOSTS)%']
+
+    # Note that the session will be started ONLY if you read or write from it.
+    session: true
+
+    form:
+        csrf_protection:
+            enabled: true
+            field_name: 'custom_token_name'
+
+when@dev:
+    framework:
+        test: true
+        session:
+            storage_factory_id: session.storage.factory.mock_file
+
+when@prod:
+    framework:
+        assets:
+            # TODO: If performance is an issue, separate CDN for assets.
+            # See https://symfony.com/doc/current/reference/configuration/framework.html#base-urls
+            # base_urls: ['%env(ASSET_URL)%']

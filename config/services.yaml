@@ -1,0 +1,59 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
+parameters:
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    Bref\Monolog\CloudWatchFormatter: ~
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+
+    # Configure the API token authenticator with the token from environment
+    App\Security\ApiTokenAuthenticator:
+        arguments:
+            $apiToken: '%env(API_TOKEN)%'
+            $useApiToken: '%env(bool:FORCE_API_TOKEN)%'
+
+    # Configure the error logger service
+    monolog.logger.error:
+        class: Symfony\Bridge\Monolog\Logger
+        arguments: ['error']
+        calls:
+            - [pushHandler, ['@monolog.handler.errors']]
+
+    # Employee Repository binding
+    App\Employee\Domain\Repository\EmployeeRepository:
+        class: App\Employee\Infrastructure\Repository\DbalEmployeeRepository
+
+    # Company Repository binding
+    App\Company\Domain\Repository\CompanyRepository:
+        class: App\Company\Infrastructure\Repository\DbalCompanyRepository
+
+    # Controller parameter binding
+    App\Application\Controller\EmployeeController:
+        arguments:
+            $csvMaxSizeMB: '%env(int:CSV_MAX_SIZE_MB)%'
+
+    # Validator parameter binding
+    App\Application\Validator\GlobalFileDataCsvValidator:
+        arguments:
+            $maxSizeMB: '%env(int:CSV_MAX_SIZE_MB)%'
+
+    # Validator parameter binding
+    App\Application\Validator\UploadFileCsvValidator:
+        arguments:
+            $maxSizeMB: '%env(int:CSV_MAX_SIZE_MB)%'
