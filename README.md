@@ -169,7 +169,8 @@ bin/console cache:clear                  # Clear Symfony cache
 1. **Authentication**: User login, password reset, account deletion. Depending on app requirements. Can use OAuth2.
 1. **Authorization**: User roles, permissions, access control
 1. **Security**: CSRF, XSS, Validation (eg: symfony/validator)
+1. **Front-End framework**: Vue.js, React, Angular
 1. **Caching Layer**: Implement Redis for performance
 1. **Performance Monitoring**: Add APM integration (Sentry, New Relic, DataDog)
-1. **API Documentation**: OpenAPI/Swagger integration
 1. **CI/CD**: Docker, Kubernetes, Serverless
+
